@@ -1,4 +1,4 @@
-import AuthForm from '@rt/components/AuthForm';
+import { AuthForm } from '@rt/components/AuthForm';
 import { Card, CardHeader, CardTitle } from '@rt/components/ui/card';
 import React from 'react';
 

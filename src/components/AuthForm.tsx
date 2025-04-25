@@ -1,5 +1,6 @@
 'use client';
 
+import { loginAction, signUpAction } from '@rt/actions/users';
 import { Button } from '@rt/components/ui/button';
 import { CardContent, CardFooter } from '@rt/components/ui/card';
 import { Input } from '@rt/components/ui/input';
@@ -8,20 +9,48 @@ import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useTransition } from 'react';
-import { useSonner } from 'sonner';
+import { toast } from 'sonner';
 
 interface AuthFormProps {
   type?: 'login' | 'signup';
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
+export const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const isLoginForm = type === 'login';
   const router = useRouter();
-  const { toast } = useSonner();
 
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (formData: FormData) => {};
+  const handleSubmit = async (formData: FormData) => {
+    startTransition(async () => {
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+      let errorMessage;
+      let title;
+      let description;
+
+      if (isLoginForm) {
+        errorMessage = (await loginAction(email, password)).errorMessage;
+        title = 'Logged in successfully';
+        description = 'You have been logged in successfully.';
+      } else {
+        errorMessage = (await signUpAction(email, password)).errorMessage;
+        title = 'Account created successfully';
+        description = 'You have been signed up successfully.';
+      }
+
+      if (!errorMessage) {
+        toast(title, {
+          description,
+        });
+        router.push('/');
+      } else {
+        toast(title, {
+          description,
+        });
+      }
+    });
+  };
   return (
     <form action={handleSubmit} className="">
       <CardContent className="grid w-full items-center gap-4">
@@ -50,7 +79,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       </CardContent>
       <CardFooter className="mt-4 flex flex-col gap-6">
         <Button className="w-full" type="submit" disabled={isPending}>
-          {isPending ? <Loader2 className="animate-spin" /> : 'Login'}
+          {isPending ? (
+            <Loader2 className="animate-spin" />
+          ) : isLoginForm ? (
+            'Login'
+          ) : (
+            'Sign Up'
+          )}
         </Button>
         <p className="text-xs">
           {isLoginForm
@@ -67,5 +102,3 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     </form>
   );
 };
-
-export default AuthForm;

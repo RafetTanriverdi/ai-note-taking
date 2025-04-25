@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@rt/styles/globals.css';
 import { ThemeProvider } from '@rt/components/theme-provider';
 import { Toaster } from '@rt/components/ui/sonner';
-import { Header } from '@rt/components/Header';
+import Header from '@rt/components/Header';
+import { SidebarProvider } from '@rt/components/ui/sidebar';
+import { AppSidebar } from '@rt/components/AppSidebar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,11 +38,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flec-col flex flex-1 px-4 pt-10 xl:px-8">
-            {children}
-          </main>
-          <Toaster />
+          <SidebarProvider>
+            <div className="flex min-h-screen w-full flex-col">
+              <Header />
+              <AppSidebar />
+              <main className="flec-col flex flex-1 px-4 pt-10 xl:px-8">
+                {children}
+              </main>
+              <Toaster />
+            </div>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
