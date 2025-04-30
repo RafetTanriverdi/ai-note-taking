@@ -5,6 +5,7 @@ import { Button } from '@rt/components/ui/button';
 import DarkModeToggle from '@rt/components/DarkModeToggle';
 import LogOutButton from '@rt/components/LogOutButton';
 import { getUser } from '@rt/auth/server';
+import { SidebarTrigger } from '@rt/components/ui/sidebar';
 
 async function Header() {
   const user = await getUser();
@@ -13,6 +14,7 @@ async function Header() {
       className="bg-popover relative flex h-24 w-full items-center justify-between px-3 sm:px-8"
       style={{ boxShadow: shadow }}
     >
+      <SidebarTrigger className="absolute top-1 left-1" />
       <Link className="item-end flex gap-2" href="/">
         <Image
           src="/goatius.png"

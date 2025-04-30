@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import '@rt/styles/globals.css';
-import { ThemeProvider } from '@rt/components/theme-provider';
 import { Toaster } from '@rt/components/ui/sonner';
 import Header from '@rt/components/Header';
 import { SidebarProvider } from '@rt/components/ui/sidebar';
-import { AppSidebar } from '@rt/components/AppSidebar';
+import AppSidebar from '@rt/components/AppSidebar';
+import { ThemeProvider } from '@rt/providers/ThemeProvider';
+import NoteProvider from '@rt/providers/NoteProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,16 +39,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <div className="flex min-h-screen w-full flex-col">
-              <Header />
+          <NoteProvider>
+            <SidebarProvider>
               <AppSidebar />
-              <main className="flec-col flex flex-1 px-4 pt-10 xl:px-8">
-                {children}
-              </main>
-              <Toaster />
-            </div>
-          </SidebarProvider>
+              <div className="flex min-h-screen w-full flex-col">
+                <Header />
+                <main className="flex flex-1 flex-col px-4 pt-10 xl:px-8">
+                  {children}
+                </main>
+                <Toaster />
+              </div>
+            </SidebarProvider>
+          </NoteProvider>
         </ThemeProvider>
       </body>
     </html>
